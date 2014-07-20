@@ -164,7 +164,7 @@ public class AppspotSocket {
                 rip=(int) (Math.random()*effecnt);
                 socketAddress = new InetSocketAddress(effelist[rip],hostport);
                 sock = (SSLSocket) sslsocketfactory.createSocket();
-                sock.connect(socketAddress,10000);
+                sock.connect(socketAddress,30000);
 
                 loopflag=false;
             }catch (SocketTimeoutException se){
