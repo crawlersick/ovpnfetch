@@ -164,7 +164,7 @@ public class AppspotSocket {
                 rip=(int) (Math.random()*effecnt);
                 socketAddress = new InetSocketAddress(effelist[rip],hostport);
                 sock = (SSLSocket) sslsocketfactory.createSocket();
-                sock.connect(socketAddress,88000);
+                sock.connect(socketAddress,10000);
 
                 loopflag=false;
             }catch (SocketTimeoutException se){
@@ -180,7 +180,7 @@ public class AppspotSocket {
         LocalBroadcastManager.getInstance(myis).sendBroadcast(localIntent);
 
         progress=30;
-        sock.setSoTimeout(250000);
+        sock.setSoTimeout(100000);
         //System.out.println("2222");
         ost=sock.getOutputStream();
         ist=sock.getInputStream();

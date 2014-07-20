@@ -172,6 +172,7 @@ public class MyIntentService extends IntentService {
 
 
             localIntent.putExtra("213123", "Start processing");
+            LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
             // Broadcasts the Intent to receivers in this app.
 
             try {
