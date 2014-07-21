@@ -95,6 +95,10 @@ public class MyActivity extends FragmentActivity implements OnBackStackChangedLi
         }
         super.onDestroy();
     }
+    @Override
+    public void onBackPressed(){
+        moveTaskToBack(true);
+    }
 
 
     private class msgReceiver extends BroadcastReceiver {
