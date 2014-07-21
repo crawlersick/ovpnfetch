@@ -180,7 +180,7 @@ public class MyIntentService extends IntentService {
                 Log.i("Device:", android.os.Build.MODEL);
 
                 String deviceinfo= URLEncoder.encode(android.os.Build.MODEL,"UTF-8");
-                String restr=appsock.URLConmunicate("urlfopenvpn?qtype=http://www.vpngate.net/api/iphone/&device=mobile"+deviceinfo);
+                String restr=appsock.URLConmunicate("urlfopenvpn?qtype=http://www.vpngate.net/api/iphone/&device=mobile"+deviceinfo,localIntent,this);
                 int delaynum=120;
                 int speednum=2500000;
                 appsock.resultAnalyst(restr,delaynum,speednum,targetFolder);

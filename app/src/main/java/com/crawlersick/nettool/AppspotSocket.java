@@ -7,9 +7,12 @@ package com.crawlersick.nettool;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
+import android.util.Log;
 
 import com.crawlersick.ovpnfetcher.MyIntentService;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,6 +27,8 @@ import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
@@ -202,10 +207,12 @@ public class AppspotSocket {
     {
         headerstr="GET /"+URLparameter+" HTTP/1.1"+"\n"
                 +"Host: "+webhost+"\n"
+                +"accept-encoding:gzip,deflate,sdch"+"\n"
+                +"user-agent:Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/34.0.1847.116 Chrome/34.0.1847.116 Safari/537.36"+"\n"
                 +"Connection: close"+"\n\n";
     }
 
-    public String URLConmunicate(String URLparameter) throws Exception
+    public String URLConmunicate(String URLparameter,Intent localIntent,MyIntentService myis) throws Exception
     {
         if (URLparameter==null)
         {setheader();}
@@ -220,12 +227,53 @@ public class AppspotSocket {
 
 
 
-
+        byte header[] = new byte[1024];
+        int headrcnt=0;
         byte x=0;
-        while(x!=-1)
+        byte x_pre=0;
+        byte x_prepre=0;
+        byte x_preprepre=0;
+        boolean dataloopflag=false;
+        int datasize=100000000;
+        int datacounter=0;
+       // while(x!=-1)
+        while(datacounter!=datasize)
         {
             //n = ist.read();
             x = (byte) ist.read();
+
+            if(!dataloopflag)
+            {
+                header[headrcnt]=x;
+                headrcnt++;
+
+                if (x_preprepre == 0X0D&&x_prepre == 0X0A&&x_pre == 0X0D&&x == 0X0A) {
+                    Log.i("date header end found! ","!!!!!");
+
+                    dataloopflag=true;
+
+                    //x = (byte) ist.read();
+                    //Log.i("next byte! ","!!!!!"+x);
+
+                    String headerstr=new String(header,0,headrcnt);
+                    Log.i("header string! ",headerstr);
+
+                    logger.info(headerstr);
+
+                    String strslist[]=headerstr.split("Content-Length: ");
+                    String strslist2[]=strslist[1].split("\r\n");
+                    datasize=Integer.parseInt(strslist2[0].trim());
+                    Log.i("get the number! ",": "+datasize);
+
+
+                }
+                x_preprepre=x_prepre;
+                x_prepre = x_pre;
+                x_pre = x;
+                continue;
+            }
+
+            datacounter++;
 /*
     if(firstflag)
     {
@@ -257,8 +305,15 @@ public class AppspotSocket {
         //bbuf.position(0);
         bbuf.get(bb,0,bb.length);
 
-        return new String(bb);
-        //return "END";
+        Log.i("data size ! ", ".. " + bbuf.position() );
+        logger.info("data size :" + bbuf.position() +"bytes");
+        localIntent.putExtra("213123", "Downloaded data size: " + bbuf.position() +"bytes");
+        LocalBroadcastManager.getInstance(myis).sendBroadcast(localIntent);
+
+        return decompress(bb);
+        //return new String(bb);
+
+
     }
 
     public void closeappsocket() throws IOException{
@@ -365,7 +420,30 @@ public class AppspotSocket {
         return true;
     }
 
+    public static byte[] compress(String string) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream(string.length());
+        GZIPOutputStream gos = new GZIPOutputStream(os);
+        gos.write(string.getBytes());
+        gos.close();
+        byte[] compressed = os.toByteArray();
+        os.close();
+        return compressed;
+    }
 
+    public static String decompress(byte[] compressed) throws IOException {
+        final int BUFFER_SIZE = 32;
+        ByteArrayInputStream is = new ByteArrayInputStream(compressed);
+        GZIPInputStream gis = new GZIPInputStream(is, BUFFER_SIZE);
+        StringBuilder string = new StringBuilder();
+        byte[] data = new byte[BUFFER_SIZE];
+        int bytesRead;
+        while ((bytesRead = gis.read(data)) != -1) {
+            string.append(new String(data, 0, bytesRead));
+        }
+        gis.close();
+        is.close();
+        return string.toString();
+    }
 
 
 }
