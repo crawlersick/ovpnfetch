@@ -176,7 +176,7 @@ public class AppspotSocket {
                 loopcnt++;
                 logger.info("" + rip+" Time out Retry connect : "+ loopcnt);
 
-                localIntent.putExtra("213123", "Time out when connecting : " + effelist[rip] +"re-connecting.. "+loopcnt);
+                localIntent.putExtra("213123", "Timeout: " + effelist[rip] +"re-connecting.. "+loopcnt);
                 LocalBroadcastManager.getInstance(myis).sendBroadcast(localIntent);
 
                 //System.out.println("" + rip+" Time out Retry connect : "+ loopcnt);
