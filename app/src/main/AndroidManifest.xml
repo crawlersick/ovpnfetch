@@ -25,20 +25,23 @@
             android:label="@string/service_fetch" >
         </service>
 
-
-        <receiver android:name="com.crawlersick.ovpnfetcher.MyActivity$msgReceiver"
-            android:enabled="true"
-            android:exported="true"
-            >
-        </receiver>
+        <!--
 
 
-    </application>
+                <receiver android:name="com.crawlersick.ovpnfetcher.MyActivity$msgReceiver"
+                    android:enabled="true"
+                    android:exported="true"
+                    >
+                </receiver>
 
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+        -->
+
+            </application>
+
+            <uses-permission
+                android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+            <uses-permission android:name="android.permission.INTERNET"/>
 
 
-</manifest>
+        </manifest>
 
