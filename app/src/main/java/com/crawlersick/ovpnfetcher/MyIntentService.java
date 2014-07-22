@@ -171,7 +171,7 @@ public class MyIntentService extends IntentService {
                             // Puts the status into the Intent
 
 
-            localIntent.putExtra("213123", "Start processing");
+            localIntent.putExtra("213123", "Start processing, may takes 5-10 minutes, please wait... ");
             LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
             // Broadcasts the Intent to receivers in this app.
 

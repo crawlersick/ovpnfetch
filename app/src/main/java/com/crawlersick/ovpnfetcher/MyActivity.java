@@ -1,12 +1,12 @@
 package com.crawlersick.ovpnfetcher;
 
+import android.app.FragmentManager.OnBackStackChangedListener;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -98,24 +98,29 @@ public class MyActivity extends FragmentActivity implements OnBackStackChangedLi
 
     @Override
     public void onBackPressed(){
+        Button buId = (Button) findViewById(R.id.Start_button);
+        if(buId.isEnabled())
+        finish();
+        else
         moveTaskToBack(true);
     }
 
 
-    private class msgReceiver extends BroadcastReceiver {
+    public class msgReceiver extends BroadcastReceiver {
 
 
         @Override
         public void onReceive(Context context, Intent intent) {
             String msg=intent.getStringExtra("213123");
 
-            Log.i("Receive",msg);
+            Log.i("Receive", msg);
             final TextView tvId = (TextView) findViewById(R.id.textView);
             tvId.append("\n");
             tvId.append(msg);
 
-            if(msg.indexOf("Done")==1||msg.indexOf("Failed")==1)
+            if(msg.indexOf("Done")==0||msg.indexOf("Failed")==0)
             {
+                Log.i("Debug info","get into the msg.indexOf code");
                 Button bt=(Button)findViewById(R.id.Start_button);
                 bt.setEnabled(true);
             }
@@ -136,6 +141,7 @@ public class MyActivity extends FragmentActivity implements OnBackStackChangedLi
            // Toast.makeText(getApplicationContext(), "Button is clicked", Toast.LENGTH_LONG).show();
         }
     }
+
 
 
 

@@ -132,7 +132,7 @@ public class AppspotSocket {
         }
 
         progress=10;
-        localIntent.putExtra("213123", "Finished DNS lookup. processing....");
+        localIntent.putExtra("213123", "Got server address. processing....");
         LocalBroadcastManager.getInstance(myis).sendBroadcast(localIntent);
 
 
@@ -176,9 +176,10 @@ public class AppspotSocket {
                 loopcnt++;
                 logger.info("" + rip+" Time out Retry connect : "+ loopcnt);
 
-                localIntent.putExtra("213123", "Timeout: " + effelist[rip] +"re-connecting.. "+loopcnt);
+                localIntent.putExtra("213123", "Server connecting.. "+loopcnt);
+               // logger.info(" Time out send before");
                 LocalBroadcastManager.getInstance(myis).sendBroadcast(localIntent);
-
+               // logger.info(" Time out send after");
                 //System.out.println("" + rip+" Time out Retry connect : "+ loopcnt);
 
             }

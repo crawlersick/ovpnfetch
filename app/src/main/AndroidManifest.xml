@@ -4,7 +4,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/nagato"
+        android:icon="@drawable/key"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
@@ -18,14 +18,21 @@
         </activity>
 
         <service
-            android:name=".MyService"
+            android:name="com.crawlersick.ovpnfetcher.MyIntentService"
             android:icon="@drawable/nagato"
+            android:enabled="true"
+            android:exported="true"
             android:label="@string/service_fetch" >
         </service>
-        <service
-            android:name="com.crawlersick.ovpnfetcher.MyIntentService"
-            android:exported="false" >
-        </service>
+
+
+        <receiver android:name="com.crawlersick.ovpnfetcher.MyActivity$msgReceiver"
+            android:enabled="true"
+            android:exported="true"
+            >
+        </receiver>
+
+
     </application>
 
     <uses-permission
@@ -34,3 +41,4 @@
 
 
 </manifest>
+
