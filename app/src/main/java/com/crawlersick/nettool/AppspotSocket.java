@@ -112,7 +112,7 @@ public class AppspotSocket {
 
         int effecnt=0;
         String effelist[]=new String[googlelist.length];
-        String dnsserverips[]={"2001:4860:4860::8888","114.114.114.114","114.114.115.115","8.8.8.8","8.8.4.4"};
+        String dnsserverips[]={"114.114.114.114","114.114.115.115","8.8.8.8","8.8.4.4"};
         int ipsidx=0;
         while(effecnt==0){
             for(int i=0;i<googlelist.length;i++)
@@ -121,7 +121,8 @@ public class AppspotSocket {
 
                     String tempresult=dq.Getip(dnsserverips[(ipsidx % (dnsserverips.length-1))], googlelist[i]);
                     String tempresultlist[] =tempresult.split("\\|");
-                    effelist[effecnt]=tempresultlist[tempresultlist.length-1];
+                    //effelist[effecnt]=tempresultlist[tempresultlist.length-1];
+                    effelist[effecnt]=tempresultlist[0];
                     effecnt++;
                 }catch(Exception e)
                 {

@@ -1,8 +1,10 @@
-package com.crawlersick.nettool;
-
-/**
- * Created by sick on 7/19/14.
+/*
+ * This function is for DNS qurey with a specified DNS server ip and Target Domain
+ * input DNS ip and Target Domain as parameter and output a ip list in below fomat:
+ * 184.154.128.246|184.154.128.245|184.154.128.244|184.154.128.243
+ *  try others if the first ip connect failed.
  */
+package com.crawlersick.nettool;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -36,12 +38,12 @@ public    class  DNSQ {
         s.connect(new InetSocketAddress(DNSs,53),3800);
         s.setSoTimeout(5000);
         //s=new Socket(DNSs,53);
-  /*
+  /*        
             String newfind= "00 1f 00 00 01 00 00 01 00 00 00 00 00 00 03 77 77 77 05 62 61 69 64 75 03 63 6f 6d 00 00 01 00 01";
             newfind=newfind.replaceAll(" ", "");
             System.out.println(newfind);
             b1=HexCodec.hexToBytes(newfind.toCharArray());
-      */
+      */      
             /*
            for(int i=0;i<datasize;i++){                    System.out.print(Integer.toHexString(b0[i])+" ");            }
             System.out.println();
@@ -50,11 +52,21 @@ public    class  DNSQ {
         osm.write(b0,0,datasize);
         //System.out.println("***************************************");
         int n=0;
-        while ((x=ism.read())!=-1)
+        int maxn=3000;
+        //while ((x=ism.read())!=-1)
+        while (true)
         {
+            x=ism.read();
             //System.out.print(Integer.toHexString(x)+"~"+x+"|");
             b3[n]=x;
             n++;
+
+       //     System.out.println(n+":  "+x);
+            if(n==maxn)
+            {break;}
+            if(n==2)
+            {maxn=x+2;}
+
         }
         //System.out.println("\n***************************************");
         String returnvalue="";
@@ -78,7 +90,8 @@ public    class  DNSQ {
             String a=
                     //   dq.Getip("8.8.8.8", "www.youtube.com");
                     // dq.Getip("8.8.8.8", "t66y.com");
-                    dq.Getip("8.8.8.8", "google.com");
+                    //dq.Getip("114.114.114.114", "google.com");
+                    dq.Getip("195.46.39.39", "google.com");
             System.out.println(a);
         } catch (Exception ex) {
             Logger.getLogger(DNSQ.class.getName()).log(Level.SEVERE, null, ex);
@@ -104,7 +117,7 @@ public    class  DNSQ {
     private int x;
     private byte[] b1;
     private byte[] b2;
-    private int[] b3=new int[1024];
+    private int[] b3=new int[3000];
     private String fdata;
     private String DNSserver;
     private String TargetDomainName;
