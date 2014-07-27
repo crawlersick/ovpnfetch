@@ -23,6 +23,7 @@ import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -89,7 +90,7 @@ public class AppspotSocket {
         String googlelist[]={
                 //   "www.google.com.hk","www.google.com.tw","www.google.com.sg","www.google.co.jp","www.google.sg","www.google.cat","www.google.jp",
                 //"google.io","google.com.my","google.com.pr","google.sk","google.st",
-                "google.de","google.cz","google.ee","google.gf","google.gp","google.hn"
+                "google.tw","google.de","google.cz","google.ee","google.gf","google.gp","google.hn"
 
                 // "www.google.sg","www.google.cat","www.google.co.jp","google.st",  "google.io","google.com.my","www.google.com.tw"
         };
@@ -111,19 +112,25 @@ public class AppspotSocket {
      */
 
         int effecnt=0;
-        String effelist[]=new String[googlelist.length];
-        String dnsserverips[]={"114.114.114.114","114.114.115.115","8.8.8.8","8.8.4.4"};
+        //String effelist[]=new String[1024];
+        String effelist[];
+        HashSet<String> EffLst=new HashSet<String>();
+        String dnsserverips[]={"58.150.55.34","60.32.112.42","208.67.222.222","114.114.114.114"};
         int ipsidx=0;
-        while(effecnt==0){
+        //while(effecnt==0){
+        while(ipsidx<dnsserverips.length){
             for(int i=0;i<googlelist.length;i++)
             {
                 try{
 
-                    String tempresult=dq.Getip(dnsserverips[(ipsidx % (dnsserverips.length-1))], googlelist[i]);
+                    String tempresult=dq.Getip(dnsserverips[(ipsidx % (dnsserverips.length))], googlelist[i]);
                     String tempresultlist[] =tempresult.split("\\|");
                     //effelist[effecnt]=tempresultlist[tempresultlist.length-1];
-                    effelist[effecnt]=tempresultlist[0];
-                    effecnt++;
+                    for(int j=0;j<tempresultlist.length;j++) {
+          //              effelist[effecnt] = tempresultlist[j];
+                        effecnt++;
+                        EffLst.add(tempresultlist[j]);
+                    }
                 }catch(Exception e)
                 {
                     System.out.println(e);
@@ -137,13 +144,22 @@ public class AppspotSocket {
         LocalBroadcastManager.getInstance(myis).sendBroadcast(localIntent);
 
 
-        // System.out.println("------------");
+/*
         for(int i=0;i<effecnt;i++)
         {
             logger.info(effelist[i]);
-            //System.out.println(effelist[i]);
         }
-        //  System.out.println("------------");
+*/
+        effelist=new String[EffLst.size()];
+        int effelistcnt=0;
+        for(String s:EffLst)
+        {
+            logger.info(s);
+            effelist[effelistcnt]=s;
+            effelistcnt++;
+        }
+
+
     /*
     String tempresult=dq.Getip("114.114.114.114", "www.google.com.cat");
     ipadrs= tempresult.split("\\|");
@@ -164,18 +180,39 @@ public class AppspotSocket {
         int rip=0;
         boolean loopflag = true;
         int loopcnt=0;
+
+        //effelist=EffLst.toArray();
+
+
+
         while(loopflag){
 
             try{
-                rip=(int) (Math.random()*effecnt);
+                if(rip==effelist.length)
+                {
+                    rip=0;
+                }
+                //rip=(int) (Math.random()*effecnt);
                 socketAddress = new InetSocketAddress(effelist[rip],hostport);
                 sock = (SSLSocket) sslsocketfactory.createSocket();
-                sock.connect(socketAddress,30000);
+                sock.connect(socketAddress,5000);
 
+
+
+
+                sock.setSoTimeout(20000);
+                //System.out.println("2222");
+
+                ost=sock.getOutputStream();
+                ist=sock.getInputStream();
+
+                progress=30;
                 loopflag=false;
+
             }catch (SocketTimeoutException se){
+                rip++;
                 loopcnt++;
-                logger.info("" + rip+" Time out Retry connect : "+ loopcnt);
+                logger.info(effelist[rip-1]+"  " + rip+" Time out Retry connect : "+ loopcnt);
 
                 localIntent.putExtra("213123", "Server connecting.. "+loopcnt);
                // logger.info(" Time out send before");
@@ -190,11 +227,8 @@ public class AppspotSocket {
         localIntent.putExtra("213123", "connected!!"+rip +" :: "+effelist[rip] + " , downloading....");
         LocalBroadcastManager.getInstance(myis).sendBroadcast(localIntent);
 
-        progress=30;
-        sock.setSoTimeout(100000);
-        //System.out.println("2222");
-        ost=sock.getOutputStream();
-        ist=sock.getInputStream();
+
+
 
         setheader();
 
