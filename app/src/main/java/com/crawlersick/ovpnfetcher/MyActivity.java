@@ -1,12 +1,16 @@
 package com.crawlersick.ovpnfetcher;
 
 import android.app.FragmentManager.OnBackStackChangedListener;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -22,6 +26,15 @@ public class MyActivity extends FragmentActivity implements OnBackStackChangedLi
     private msgReceiver mFragmentDisplayer = new msgReceiver();
     IntentFilter statusIntentFilter = new IntentFilter(
             "John");
+
+
+    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+            .setSmallIcon(R.drawable.nagato)
+            .setContentTitle("OVPN notification")
+            .setContentText("OVPN Files Process finished!")
+            ;
+    int mNotificationId = 001;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +49,16 @@ public class MyActivity extends FragmentActivity implements OnBackStackChangedLi
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 mFragmentDisplayer,statusIntentFilter
         );
+
+        Intent resultIntent = new Intent(this, MyActivity.class);
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
 
         // Inflate the menu; this adds items to the action bar if it is present.
 
@@ -123,6 +146,21 @@ public class MyActivity extends FragmentActivity implements OnBackStackChangedLi
                 Log.i("Debug info","get into the msg.indexOf code");
                 Button bt=(Button)findViewById(R.id.Start_button);
                 bt.setEnabled(true);
+
+                // Sets an ID for the notification
+
+                // Gets an instance of the NotificationManager service
+                NotificationManager mNotifyMgr =
+                       (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                // Builds the notification and issues it.
+                mBuilder.setContentText(msg);
+
+
+                mBuilder.setAutoCancel(true);
+                mBuilder.setLights(Color.YELLOW,800,800);
+
+                mNotifyMgr.notify(mNotificationId, mBuilder.build());
+
             }
 
             tvId.post(new Runnable() {

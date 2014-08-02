@@ -90,7 +90,7 @@ public class AppspotSocket {
         String googlelist[]={
                 //   "www.google.com.hk","www.google.com.tw","www.google.com.sg","www.google.co.jp","www.google.sg","www.google.cat","www.google.jp",
                 //"google.io","google.com.my","google.com.pr","google.sk","google.st",
-                "google.tw","google.de","google.cz","google.ee","google.gf","google.gp","google.hn"
+                "google.hk","google.tw","google.de","google.cz","google.ee","google.gf","google.gp","google.hn"
 
                 // "www.google.sg","www.google.cat","www.google.co.jp","google.st",  "google.io","google.com.my","www.google.com.tw"
         };
