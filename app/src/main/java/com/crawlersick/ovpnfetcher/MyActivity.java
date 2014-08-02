@@ -1,13 +1,13 @@
 package com.crawlersick.ovpnfetcher;
 
 import android.app.FragmentManager.OnBackStackChangedListener;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
@@ -157,7 +157,8 @@ public class MyActivity extends FragmentActivity implements OnBackStackChangedLi
 
 
                 mBuilder.setAutoCancel(true);
-                mBuilder.setLights(Color.YELLOW,800,800);
+                //mBuilder.setLights(Color.YELLOW,800,800);
+                mBuilder.setDefaults(Notification.DEFAULT_ALL);
 
                 mNotifyMgr.notify(mNotificationId, mBuilder.build());
 
