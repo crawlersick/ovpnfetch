@@ -221,6 +221,18 @@ public class AppspotSocket {
                 //System.out.println("" + rip+" Time out Retry connect : "+ loopcnt);
 
             }
+            catch (Exception se){
+                rip++;
+                loopcnt++;
+                logger.info(effelist[rip-1]+"  " + rip+" connect problem: "+ loopcnt+" "+se.toString());
+
+                localIntent.putExtra("213123", "Server connecting.. "+loopcnt);
+                // logger.info(" Time out send before");
+                LocalBroadcastManager.getInstance(myis).sendBroadcast(localIntent);
+                // logger.info(" Time out send after");
+                //System.out.println("" + rip+" Time out Retry connect : "+ loopcnt);
+
+            }
         }
         logger.info("connected!!"+rip +" :: "+effelist[rip]);
         //System.out.println("connected!!"+rip +" :: "+effelist[rip]);
