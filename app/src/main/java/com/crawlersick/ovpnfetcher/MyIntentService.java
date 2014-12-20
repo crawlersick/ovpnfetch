@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
+import com.crawlersick.systool.*;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -76,6 +77,7 @@ public class MyIntentService extends IntentService {
             try {
             String extStore = System.getenv("EXTERNAL_STORAGE");
             f_exts = new File(extStore);
+
             Log.i("extstore", f_exts.getAbsolutePath());
             }catch(Exception e)
             {
@@ -95,14 +97,18 @@ public class MyIntentService extends IntentService {
 
             String targetFolder=null;
             String targetBKFolder=null;
-            if(f_secs!=null)
+
+
+            Root rt=new Root();
+            if(f_secs!=null&&f_secs.canWrite()&&rt.isDeviceRooted())
             {
 
                 targetFolder=f_secs.getAbsoluteFile()+"/";
             }
             else
             {
-                if(f_exts!=null)
+                if(f_exts!=null&&
+                        f_exts.canWrite())
                 targetFolder=f_exts.getAbsoluteFile()+"/";
             }
 
