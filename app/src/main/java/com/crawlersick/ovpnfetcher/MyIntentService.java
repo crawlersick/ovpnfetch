@@ -14,6 +14,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
+
+import com.crawlersick.nettool.GetattchmentFromMail1;
 import com.crawlersick.systool.*;
 
 /**
@@ -182,15 +184,21 @@ public class MyIntentService extends IntentService {
             // Broadcasts the Intent to receivers in this app.
 
             try {
-                AppspotSocket appsock= new AppspotSocket("vpngatefetch",targetFolder,localIntent,this);
+              //  AppspotSocket appsock= new AppspotSocket("vpngatefetch",targetFolder,localIntent,this);
+                GetattchmentFromMail1 ghfm=new GetattchmentFromMail1("imap-mail.outlook.com", "temp1q2w3e@hotmail.com", "Testing123",targetFolder,localIntent,this);
                 Log.i("Device:", android.os.Build.MODEL);
-
                 String deviceinfo= URLEncoder.encode(android.os.Build.MODEL,"UTF-8");
-                String restr=appsock.URLConmunicate("urlfopenvpn?qtype=http://www.vpngate.net/api/iphone/&device=mobile"+deviceinfo,localIntent,this);
+                //String restr=appsock.URLConmunicate("urlfopenvpn?qtype=http://www.vpngate.net/api/iphone/&device=mobile"+deviceinfo,localIntent,this);
+                boolean fetflag=ghfm.fetchmailforattch();
+
+                localIntent.putExtra("213123", "fetch mail: "+fetflag);
+
+                byte[]bb=ghfm.getValidVGattch();
+                String restr=ghfm.decompress(bb);
                 int delaynum=120;
                 int speednum=2500000;
-                appsock.resultAnalyst(restr,delaynum,speednum,targetFolder);
-                appsock.closeappsocket();
+                ghfm.resultAnalyst(restr,delaynum,speednum,targetFolder);
+              //  appsock.closeappsocket();
 
                 localIntent.putExtra("213123", "Done, Please find ovpn files in "+targetFolder);
             } catch (Exception ex) {
